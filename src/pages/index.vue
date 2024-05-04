@@ -1,5 +1,5 @@
 <template>
-  <HelloWorld />
+  <NoticeTable />
 </template>
 
 <script lang="ts" setup>
