@@ -69,6 +69,10 @@ export default defineConfig({
     ],
   },
   server: {
+    // NOTE wsl 환경에서 실행할 경우 파일 변경 추적이 안되서 아래 속성을 추가함
+    watch: {
+      usePolling: true,
+    },
     port: 3000,
   },
 })
