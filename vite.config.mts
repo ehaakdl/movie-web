@@ -69,6 +69,9 @@ export default defineConfig({
     ],
   },
   server: {
+    proxy: {
+      '/api/v1': process.env.VITE_BASE_URL,
+    },
     port: 3000,
   },
 })
