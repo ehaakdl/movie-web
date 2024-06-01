@@ -1,28 +1,27 @@
 import axios from 'axios';
 
-const instance = axios.create({
+const axiosInst = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
   headers: {
-    "Content-Type":"application/json"
+    "Content-Type": "application/json"
   }
 })
 
-instance.interceptors.request.use(
+axiosInst.interceptors.request.use(
   (config) => {
-    console.log('axios.js request : ' , config);
     return config
   },
   (error) => {
-    return Promise.reject(error);
+    return error;
   }
 );
-instance.interceptors.response.use(
+
+axiosInst.interceptors.response.use(
   (res) => {
-    console.log('axios.js response : ' , res);
     return res
   },
   (error) => {
-    return Promise.reject(error);
+    return error;
   }
 )
-export default instance;
+export default axiosInst

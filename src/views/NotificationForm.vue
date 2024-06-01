@@ -1,11 +1,18 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { VCardSubtitle, VLabel, VTextField } from 'vuetify/components';
+import { useNotificationMethodStore } from '../stores/notificationMethodStore';
+import { SaveNoticiationMethodRequest, eNoticationMethodType } from '../stores/typed.d';
 
 const email = ref('')
+const notificationMethodStore = useNotificationMethodStore()
 
 const onSubmit = () => {
-  console.log(email.value)
+  const request : SaveNoticiationMethodRequest = {
+    email: email.value,
+    method: eNoticationMethodType.email
+  }
+  notificationMethodStore.save(request)
 }
 </script>
 <template>
