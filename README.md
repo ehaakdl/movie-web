@@ -8,3 +8,7 @@ yarn install
 
 ### 실행
 yarn dev
+
+
+### dockerize
+docker build -t ehaakdl/movie-web .
