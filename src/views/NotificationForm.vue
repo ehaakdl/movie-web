@@ -3,16 +3,25 @@ import { ref } from 'vue';
 import { VCardSubtitle, VLabel, VTextField } from 'vuetify/components';
 import { useNotificationMethodStore } from '../stores/notificationMethodStore';
 import { SaveNoticiationMethodRequest, eNoticationMethodType } from '../stores/typed.d';
+import { useMessageSnackbarStore } from '../stores/messageSnackbar';
 
 const email = ref('')
 const notificationMethodStore = useNotificationMethodStore()
-
+const messageSnackbarStore = useMessageSnackbarStore()
 const onSubmit = () => {
-  const request : SaveNoticiationMethodRequest = {
+  const request: SaveNoticiationMethodRequest = {
     email: email.value,
     method: eNoticationMethodType.email
   }
-  notificationMethodStore.save(request)
+  notificationMethodStore.save(request).then((result) => {
+    if (result?.status !== 200) {
+      messageSnackbarStore.show(result?.message)
+    }
+  }).catch((err) => {
+    if (err?.status !== 200) {
+      messageSnackbarStore.show(err?.message)
+    }
+  });
 }
 </script>
 <template>
@@ -30,6 +39,6 @@ const onSubmit = () => {
 
 
     </VForm>
-  </VCard>
 
+  </VCard>
 </template>
