@@ -13,13 +13,20 @@ const onSubmit = () => {
     email: email.value,
     method: eNoticationMethodType.email
   }
-  notificationMethodStore.save(request).then((result) => {
-    if (result?.status !== 200) {
-      messageSnackbarStore.show(result?.message)
+  notificationMethodStore.save(request).then((response) => {
+    if (response?.status === 201) {
+      messageSnackbarStore.show(response.data.message)
+    }
+    else if (response.data?.message) {
+      messageSnackbarStore.show(response.data.message)
+    } else {
+      messageSnackbarStore.showUnkownError()
     }
   }).catch((err) => {
-    if (err?.status !== 200) {
-      messageSnackbarStore.show(err?.message)
+    if (err?.message) {
+      messageSnackbarStore.show(err.message)
+    } else {
+      messageSnackbarStore.showUnkownError()
     }
   });
 }

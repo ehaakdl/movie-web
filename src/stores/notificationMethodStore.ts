@@ -1,14 +1,13 @@
 
 import { defineStore } from 'pinia'
-import { CommonResponse, SaveNoticiationMethodRequest } from './typed';
-import axios from '@axios';
+import { SaveNoticiationMethodRequest } from './typed';
+import axiosInst from '@axios';
 
 export const useNotificationMethodStore = defineStore('notificationMethod', () => {
-
-  async function save(data: SaveNoticiationMethodRequest): Promise<CommonResponse> {
-    return axios.post('/notification/method', data)
-      .then((response) => {
-        return response
+  async function save(payload: SaveNoticiationMethodRequest) {
+    return axiosInst.post('/notification/method', payload)
+      .then((data) => {
+        return data
       })
       .catch((error) => {
         return error
