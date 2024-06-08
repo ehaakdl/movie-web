@@ -12,7 +12,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # 환경변수 복사한다(yarn preivew 시 자동으로 읽어들인다.)
-COPY .env ./
+COPY .env* ./
 
 # install project dependencies leaving out dev dependencies
 RUN yarn
