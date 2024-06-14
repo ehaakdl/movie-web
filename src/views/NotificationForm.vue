@@ -1,19 +1,19 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { VCardSubtitle, VLabel, VTextField } from 'vuetify/components';
-import { useNotificationMethodStore } from '../stores/notificationMethodStore';
-import { SaveNoticiationMethodRequest, eNoticationMethodType } from '../stores/typed.d';
+import { useUserStore } from '../stores/UserStore';
+import { UserRegisterRequest } from '../stores/typed.d';
 import { useMessageSnackbarStore } from '../stores/messageSnackbar';
 
 const email = ref('')
-const notificationMethodStore = useNotificationMethodStore()
+const userStore = useUserStore()
 const messageSnackbarStore = useMessageSnackbarStore()
 const onSubmit = () => {
-  const request: SaveNoticiationMethodRequest = {
+  const request: UserRegisterRequest = {
     email: email.value,
-    method: eNoticationMethodType.email
+    password: 'empty'
   }
-  notificationMethodStore.save(request).then((response) => {
+  userStore.register(request).then((response) => {
     if (response?.status === 201) {
       messageSnackbarStore.show(response.data.message)
     }

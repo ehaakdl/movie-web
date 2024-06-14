@@ -4,9 +4,9 @@ export enum eNoticationMethodType{
 export enum eResponseStatusType{
   success, fail
 }
-export interface SaveNoticiationMethodRequest{
+export interface UserRegisterRequest{
   email:string,
-  method:eNoticationMethodType
+  password:string
 }
 
 export interface CommonResponse{
