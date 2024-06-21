@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { VCardSubtitle, VLabel, VTextField } from 'vuetify/components';
-import { useUserStore } from '../stores/UserStore';
-import { UserRegisterRequest } from '../stores/typed.d';
-import { useMessageSnackbarStore } from '../stores/messageSnackbar';
+import { useUserStore } from '@/stores/UserStore';
+import { UserRegisterRequest } from '@/stores/typed.d';
+import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbar';
 
 const email = ref('')
 const userStore = useUserStore()
-const messageSnackbarStore = useMessageSnackbarStore()
+const globalSnackbarStore = useGlobalSnackbarStore()
 const onSubmit = () => {
   const request: UserRegisterRequest = {
     email: email.value,
@@ -15,18 +15,18 @@ const onSubmit = () => {
   }
   userStore.register(request).then((response) => {
     if (response?.status === 201) {
-      messageSnackbarStore.show(response.data.message)
+      globalSnackbarStore.show(response.data.message)
     }
     else if (response.data?.message) {
-      messageSnackbarStore.show(response.data.message)
+      globalSnackbarStore.show(response.data.message)
     } else {
-      messageSnackbarStore.showUnkownError()
+      globalSnackbarStore.showUnkownError()
     }
   }).catch((err) => {
     if (err?.message) {
-      messageSnackbarStore.show(err.message)
+      globalSnackbarStore.show(err.message)
     } else {
-      messageSnackbarStore.showUnkownError()
+      globalSnackbarStore.showUnkownError()
     }
   });
 }

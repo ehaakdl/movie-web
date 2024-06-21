@@ -1,3 +1,13 @@
+<script lang="ts" setup>
+import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbar';
+
+import { storeToRefs } from 'pinia'
+
+const globalSnackbarStore = useGlobalSnackbarStore()
+const { isVisibleMessageBar, message } = storeToRefs(globalSnackbarStore)
+</script>
+
+
 <template>
   <v-app id="inspire">
     <v-main class="bg-primary">
@@ -11,11 +21,3 @@
 </template>
 
 
-<script lang="ts" setup>
-import { useMessageSnackbarStore } from '../stores/messageSnackbar';
-
-import { storeToRefs } from 'pinia'
-
-const messageSnackbarStore = useMessageSnackbarStore()
-const { isVisibleMessageBar, message } = storeToRefs(messageSnackbarStore)
-</script>

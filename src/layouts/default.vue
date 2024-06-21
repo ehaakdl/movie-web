@@ -27,11 +27,11 @@
 </template>
 
 <script lang="ts" setup>
-import { useMessageSnackbarStore } from '../stores/messageSnackbar';
+import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbar';
 
 import { storeToRefs } from 'pinia'
 
-const drawer = ref(null)
-const messageSnackbarStore = useMessageSnackbarStore()
-const { isVisibleMessageBar, message } = storeToRefs(messageSnackbarStore)
+const drawer = ref(true)
+const globalSnackbarStore = useGlobalSnackbarStore()
+const { isVisibleMessageBar, message } = storeToRefs(globalSnackbarStore)
 </script>

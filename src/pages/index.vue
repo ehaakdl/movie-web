@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import NotificationForm from '../views/NotificationForm.vue';
+import NotificationForm from '@/views/NotificationForm.vue';
 
   //
 </script>

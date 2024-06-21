@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useMessageSnackbarStore = defineStore('messageSnackbarStore', () => {
+export const useGlobalSnackbarStore = defineStore('globalSnackbarStore', () => {
   const isVisibleMessageBar = ref(false)
   const message = ref('')
 

@@ -10,7 +10,7 @@ const headers = [
   { title: 'Height', align: 'end', key: 'height' },
   { title: 'Pet Friendly', align: 'end', key: 'petFriendly' },
   { title: 'Price ($)', align: 'end', key: 'price' },
-]
+] as const
 const itemsPerPage = ref(5)
 const items = ref([{
   name: 'Fern',
