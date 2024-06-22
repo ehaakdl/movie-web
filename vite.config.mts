@@ -6,6 +6,7 @@ import Layouts from 'vite-plugin-vue-layouts'
 import Vue from '@vitejs/plugin-vue'
 import VueRouter from 'unplugin-vue-router/vite'
 import Vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite' // vite ver4 이상
 
 // Utilities
 import { defineConfig } from 'vite'
@@ -52,6 +53,10 @@ export default defineConfig({
         }],
       },
     }),
+    VueI18nPlugin({
+      // you need to set i18n resource including paths !
+      include: fileURLToPath(new URL('./src/plugins/i18n/locales/**', import.meta.url))
+    })
   ],
   define: { 'process.env': {} },
   resolve: {
