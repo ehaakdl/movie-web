@@ -14,6 +14,8 @@ import { fileURLToPath, URL } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  // SSR 모드로 동작시 vuetify 외부에서 참조하게 해야함
+  ssr: { noExternal: ['vuetify'] },
   plugins: [
     VueRouter({
       dts: 'src/typed-router.d.ts',

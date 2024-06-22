@@ -2,12 +2,15 @@
   "name": "movie-web",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "engines": {
     "node": "18.18.x"
   },
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build --mode production",
+    "dev": "node server",
+    "build": "yarn build:client && yarn build:server --emptyOutDir",
+    "build:client": "vite build --outDir dist/client",
+    "build:server": "vite build --outDir dist/server --ssr src/entry-server.js",
     "preview": "vite --host 0.0.0.0 preview",
     "lint": "eslint . --ignore-path .gitignore"
   },
@@ -15,6 +18,7 @@
     "@mdi/font": "6.2.95",
     "axios": "^1.7.2",
     "core-js": "^3.34.0",
+    "express": "^4.19.2",
     "roboto-fontface": "*",
     "vue": "^3.4.21",
     "vue-i18n": "^9.13.1",

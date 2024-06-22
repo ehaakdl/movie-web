@@ -8,13 +8,12 @@
 import { registerPlugins } from '@/plugins'
 
 // Components
-import App from './App.vue'
+import App from '@/App.vue'
+import { createSSRApp } from 'vue'
 
-// Composables
-import { createApp } from 'vue'
+export function createApp() {
+  const app = createSSRApp(App)
+  registerPlugins(app)
 
-const app = createApp(App)
-
-registerPlugins(app)
-
-app.mount('#app')
+  return { app }
+}
