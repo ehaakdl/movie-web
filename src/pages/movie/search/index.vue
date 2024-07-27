@@ -1,0 +1,3 @@
+<template>
+  <NoticeTable></NoticeTable>
+</template>
