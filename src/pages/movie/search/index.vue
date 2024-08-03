@@ -1,3 +1,7 @@
+<script setup lang="ts">
+import MovieList from '@/views/MovieList.vue';
+</script>
+
 <template>
-  <NoticeTable></NoticeTable>
+  <MovieList></MovieList>
 </template>

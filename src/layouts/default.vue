@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts" setup>
-import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbar';
+import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
 
 import { storeToRefs } from 'pinia'
 

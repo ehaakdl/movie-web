@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { VCardSubtitle, VLabel, VTextField } from 'vuetify/components';
-import { useUserStore } from '@/stores/UserStore';
+import { useUserStore } from '@/stores/useUserStore';
 import { UserRegisterRequest } from '@/stores/typed.d';
-import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbar';
+import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
 
 const email = ref('')
 const userStore = useUserStore()
@@ -20,13 +20,13 @@ const onSubmit = () => {
     else if (response.data?.message) {
       globalSnackbarStore.show(response.data.message)
     } else {
-      globalSnackbarStore.showUnkownError()
+      globalSnackbarStore.showUnknown()
     }
   }).catch((err) => {
     if (err?.message) {
       globalSnackbarStore.show(err.message)
     } else {
-      globalSnackbarStore.showUnkownError()
+      globalSnackbarStore.showUnknown()
     }
   });
 }

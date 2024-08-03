@@ -2,11 +2,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useGlobalSnackbarStore = defineStore('globalSnackbarStore', () => {
+export const useGlobalSnackbarStore = defineStore('useGlobalSnackbarStore', () => {
   const isVisibleMessageBar = ref(false)
   const message = ref('')
 
-  const showUnkownError = () => {
+  const showUnknown = () => {
     message.value = '알 수 없는 에러 발생'
     isVisibleMessageBar.value = true
   }
@@ -15,5 +15,5 @@ export const useGlobalSnackbarStore = defineStore('globalSnackbarStore', () => {
     isVisibleMessageBar.value = true
   }
 
-  return { isVisibleMessageBar, message , show, showUnkownError}
+  return { isVisibleMessageBar, message , show, showUnknown}
 })

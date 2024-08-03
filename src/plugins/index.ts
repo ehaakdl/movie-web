@@ -5,13 +5,14 @@
  */
 
 // Plugins
-import vuetify from './vuetify'
-import pinia from '@/stores'
-import router from '@/router'
+import vuetify from '@/plugins/vuetify'
+import pinia from '@/plugins/pinia'
+import router from '@/plugins/router'
+import i18n from '@/plugins/i18n'
 
 // Types
 import type { App } from 'vue'
-import i18n from '@/plugins/i18n'
+
 
 export function registerPlugins (app: App) {
   app
