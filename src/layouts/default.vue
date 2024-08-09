@@ -16,7 +16,7 @@
       <v-app-bar-title>Movie</v-app-bar-title>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="ma-4">
       <router-view />
       <v-snackbar v-model="isVisibleMessageBar" :timeout="2000">
         {{ message }}

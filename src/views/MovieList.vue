@@ -1,14 +1,29 @@
 <template>
-  <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="items"
-    :items-length="totalCount" @update:options="loadItems"></v-data-table-server>
+
+  <VCard>
+    <VCardText>
+      <VRow justify="end">
+        <VCol cols="12" md="3" lg="3">
+          <VueDatePicker v-model.range="selectedDateRange" range :enable-time-picker="false" />
+        </VCol>
+      </VRow>
+    </VCardText>
+
+    <VCardText>
+      <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="items"
+        :items-length="totalCount" @update:options="loadItems"></v-data-table-server>
+    </VCardText>
+  </VCard>
+
+
 </template>
 
 <script setup lang="ts">
-import { CommonResponse } from '@/stores/typed';
 import { useMovieStore } from '@/stores/useMovieStore';
 import { Pagination } from './typed';
 import { SortOrder } from '@/stores/constants';
 import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
+import { VCard, VCardText } from 'vuetify/components';
 
 const movieStore = useMovieStore()
 const globalSnackbarStore = useGlobalSnackbarStore()
@@ -20,6 +35,7 @@ const headers = [
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
 
+const selectedDateRange = ref()
 const items = ref([])
 const totalCount = ref(0)
 const itemsPerPage = ref(5)
@@ -44,4 +60,7 @@ const loadItems = (pagination: Pagination) => {
     }
   })
 }
+watch(selectedDateRange, () => {
+  console.log(selectedDateRange.value)
+})
 </script>
