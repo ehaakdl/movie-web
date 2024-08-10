@@ -2,6 +2,7 @@
 
   <VRow justify="end">
     <VCol cols="12" md="3" lg="3">
+      <VLabel>영화 데이터 등록날짜</VLabel>
       <VueDatePicker :model-value="selectedDateRange" range :enable-time-picker="false"
         @update:model-value="handleDate" />
     </VCol>
