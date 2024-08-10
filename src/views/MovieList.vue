@@ -22,6 +22,10 @@ import { getBeginningOfDay, getEndOfDayTime } from '@/utils/dateUtils';
 
 const movieStore = useMovieStore()
 const globalSnackbarStore = useGlobalSnackbarStore()
+
+const defaultPage = 1
+const defaultItemPerPage = 5
+
 const headers = [
   { title: '영화명', align: 'start', sortable: false, key: 'movieName' },
   // { title: '감독명', align: 'end', key: 'director' },
@@ -81,6 +85,16 @@ const loadItems = (_pagination: Pagination) => {
 
 const handleDate = (date: Date[]) => {
   selectedDateRange.value = date
+
+  /**
+   * v-model로 연결된 데이터가 이전 값과 동일할 경우, 
+   * @update:options로 연결된 loadItems가 호출되지 않으므로, 
+   * 이 경우에는 loadItems를 직접 호출해야 합니다.
+   */
+  if(page.value == defaultPage && itemsPerPage.value == defaultItemPerPage){
+      loadItems(pagination.value)  
+  }
+  
   page.value = 1
   itemsPerPage.value = 5
 }
