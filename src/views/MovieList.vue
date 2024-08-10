@@ -7,8 +7,15 @@
         @update:model-value="handleDate" />
     </VCol>
   </VRow>
-  <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers" :items="items"
-        :items-length="totalCount" @update:options="loadItems"></v-data-table-server>
+  <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers"
+    :items="items" :items-length="totalCount" @update:options="loadItems">
+    <template v-slot:item.createdAt="{ item }">
+      {{ formatDate(convertToLocalTime(item.createdAt), 'YYYY-MM-DD') }}
+    </template>
+    <template v-slot:item.openAt="{ item }">
+      {{ formatDate(convertToLocalTime(item.openAt), 'YYYY-MM-DD') }}
+    </template>
+  </v-data-table-server>
 
 
 
@@ -19,7 +26,7 @@ import { useMovieStore } from '@/stores/useMovieStore';
 import { Pagination } from './typed';
 import { SortOrder } from '@/stores/constants';
 import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
-import { getBeginningOfDay, getEndOfDayTime } from '@/utils/dateUtils';
+import { convertToLocalTime, formatDate, getBeginningOfDay, getEndOfDayTime } from '@/utils/dateUtils';
 
 const movieStore = useMovieStore()
 const globalSnackbarStore = useGlobalSnackbarStore()
@@ -34,6 +41,7 @@ const headers = [
   { title: '개봉날짜', align: 'end', sortable: false, key: 'openAt' },
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
+
 const loading = ref(false)
 const selectedDateRange = ref<Date[]>()
 const items = ref([])
@@ -80,7 +88,7 @@ const loadItems = (_pagination: Pagination) => {
       globalSnackbarStore.showUnknown()
     }
   }).finally(() => {
-    loading.value =false
+    loading.value = false
   })
 }
 
@@ -88,15 +96,15 @@ const handleDate = (date: Date[]) => {
   selectedDateRange.value = date
 
   /**
-   * v-model로 연결된 데이터가 이전 값과 동일할 경우, 
-   * @update:options로 연결된 loadItems가 호출되지 않으므로, 
+   * v-model로 연결된 데이터가 이전 값과 동일할 경우,
+   * @update:options로 연결된 loadItems가 호출되지 않으므로,
    * 이 경우에는 loadItems를 직접 호출해야 합니다.
    */
-  if(page.value == defaultPage && itemsPerPage.value == defaultItemPerPage){
-      loadItems(pagination.value)  
+  if (page.value == defaultPage && itemsPerPage.value == defaultItemPerPage) {
+    loadItems(pagination.value)
   }
-  
-  page.value = 1
-  itemsPerPage.value = 5
+
+  page.value = defaultPage
+  itemsPerPage.value = defaultItemPerPage
 }
 </script>
