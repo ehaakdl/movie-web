@@ -24,7 +24,7 @@ export type DateFormat = 'YYYY-MM-DD' | 'ISO';
 export const formatDate = (date: Date, format: DateFormat) => {
   const pad = (num: number) => String(num).padStart(2, '0');
   if (format == 'YYYY-MM-DD') {
-    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${date.getDate()}`
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
   } else {
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}.${String(date.getMilliseconds()).padStart(3, '0')}Z`;
   }

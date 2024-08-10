@@ -2,9 +2,14 @@
 
   <VRow justify="end">
     <VCol cols="12" md="3" lg="3">
-      <VLabel>영화 데이터 등록날짜</VLabel>
-      <VueDatePicker :model-value="selectedDateRange" range :enable-time-picker="false"
-        @update:model-value="handleDate" />
+      <VLabel>등록날짜</VLabel>
+      <VueDatePicker :model-value="selectedCreatedAtRange" range :enable-time-picker="false"
+        @update:model-value="handleCreatedAt" />
+    </VCol>
+    <VCol cols="12" md="3" lg="3">
+      <VLabel>개봉날짜</VLabel>
+      <VueDatePicker :model-value="selectedOpenAtRange" range :enable-time-picker="false"
+        @update:model-value="handleOpenAt" />
     </VCol>
   </VRow>
   <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers"
@@ -43,7 +48,8 @@ const headers = [
 ] as const
 
 const loading = ref(false)
-const selectedDateRange = ref<Date[]>()
+const selectedCreatedAtRange = ref<Date[]>()
+const selectedOpenAtRange = ref<Date[]>()
 const items = ref([])
 const totalCount = ref(0)
 const itemsPerPage = ref(5)
@@ -62,9 +68,16 @@ const loadItems = (_pagination: Pagination) => {
 
   let startCreatedAt = undefined
   let endCreatedAt = undefined
-  if (selectedDateRange.value) {
-    startCreatedAt = getBeginningOfDay(selectedDateRange.value[0]).toISOString()
-    endCreatedAt = getEndOfDayTime(selectedDateRange.value[1]).toISOString()
+  if (selectedCreatedAtRange.value) {
+    startCreatedAt = getBeginningOfDay(selectedCreatedAtRange.value[0]).toISOString()
+    endCreatedAt = getEndOfDayTime(selectedCreatedAtRange.value[1]).toISOString()
+  }
+
+  let startOpenAt = undefined
+  let endOpenAt = undefined
+  if (selectedOpenAtRange.value) {
+    startOpenAt = getBeginningOfDay(selectedOpenAtRange.value[0]).toISOString()
+    endOpenAt = getEndOfDayTime(selectedOpenAtRange.value[1]).toISOString()
   }
 
   const sort = pagination.value.sortBy ?? []
@@ -74,7 +87,9 @@ const loadItems = (_pagination: Pagination) => {
     sortBy: sort.length > 0 ? sort[0].key : '',
     sortOrder: sort.length > 0 ? sort[0].order : SortOrder.Desc,
     startCreatedAt,
-    endCreatedAt
+    endCreatedAt,
+    startOpenAt,
+    endOpenAt
   })
 
   movieStore.getMovies(query).then((res) => {
@@ -92,19 +107,26 @@ const loadItems = (_pagination: Pagination) => {
   })
 }
 
-const handleDate = (date: Date[]) => {
-  selectedDateRange.value = date
+const handleCreatedAt = (date: Date[]) => {
+  selectedCreatedAtRange.value = date
+  resetPaginationAndLoadItems()
+}
+const handleOpenAt = (date: Date[]) => {
+  selectedOpenAtRange.value = date
+  resetPaginationAndLoadItems()
+}
 
+const resetPaginationAndLoadItems = () => {
   /**
    * v-model로 연결된 데이터가 이전 값과 동일할 경우,
    * @update:options로 연결된 loadItems가 호출되지 않으므로,
    * 이 경우에는 loadItems를 직접 호출해야 합니다.
    */
-  if (page.value == defaultPage && itemsPerPage.value == defaultItemPerPage) {
-    loadItems(pagination.value)
+  if (page.value === defaultPage && itemsPerPage.value === defaultItemPerPage) {
+    loadItems(pagination.value);
   }
 
-  page.value = defaultPage
-  itemsPerPage.value = defaultItemPerPage
-}
+  page.value = defaultPage;
+  itemsPerPage.value = defaultItemPerPage;
+};
 </script>
