@@ -1,19 +1,14 @@
 <template>
 
-  <VCard>
-    <VCardText>
-      <VRow justify="end">
-        <VCol cols="12" md="3" lg="3">
-          <VueDatePicker v-model.range="selectedDateRange" range :enable-time-picker="false" />
-        </VCol>
-      </VRow>
-    </VCardText>
-
-    <VCardText>
-      <v-data-table-server v-model:items-per-page="itemsPerPage" :headers="headers" :items="items"
+  <VRow justify="end">
+    <VCol cols="12" md="3" lg="3">
+      <VueDatePicker :model-value="selectedDateRange" range :enable-time-picker="false"
+        @update:model-value="handleDate" />
+    </VCol>
+  </VRow>
+  <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers" :items="items"
         :items-length="totalCount" @update:options="loadItems"></v-data-table-server>
-    </VCardText>
-  </VCard>
+
 
 
 </template>
@@ -23,7 +18,7 @@ import { useMovieStore } from '@/stores/useMovieStore';
 import { Pagination } from './typed';
 import { SortOrder } from '@/stores/constants';
 import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
-import { VCard, VCardText } from 'vuetify/components';
+import { getBeginningOfDay, getEndOfDayTime } from '@/utils/dateUtils';
 
 const movieStore = useMovieStore()
 const globalSnackbarStore = useGlobalSnackbarStore()
@@ -34,23 +29,44 @@ const headers = [
   { title: '개봉날짜', align: 'end', sortable: false, key: 'openAt' },
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
-
-const selectedDateRange = ref()
+const loading = ref(false)
+const selectedDateRange = ref<Date[]>()
 const items = ref([])
 const totalCount = ref(0)
 const itemsPerPage = ref(5)
+const page = ref(1)
+const pagination = ref<Pagination>({
+  itemsPerPage: itemsPerPage.value,
+  page: page.value,
+  sortBy: []
+})
 
-const loadItems = (pagination: Pagination) => {
-  const sort = pagination.sortBy ?? []
+
+const loadItems = (_pagination: Pagination) => {
+  loading.value = true
+
+  pagination.value = _pagination
+
+  let startCreatedAt = undefined
+  let endCreatedAt = undefined
+  if (selectedDateRange.value) {
+    startCreatedAt = getBeginningOfDay(selectedDateRange.value[0]).toISOString()
+    endCreatedAt = getEndOfDayTime(selectedDateRange.value[1]).toISOString()
+  }
+
+  const sort = pagination.value.sortBy ?? []
   const query = movieStore.createSearchRequest({
-    page: pagination.page,
-    pageSize: pagination.itemsPerPage,
+    ...pagination.value,
+    pageSize: pagination.value.itemsPerPage,
     sortBy: sort.length > 0 ? sort[0].key : '',
-    sortOrder: sort.length > 0 ? sort[0].order : SortOrder.Desc
+    sortOrder: sort.length > 0 ? sort[0].order : SortOrder.Desc,
+    startCreatedAt,
+    endCreatedAt
   })
 
   movieStore.getMovies(query).then((res) => {
     items.value = res.data.contents?.items ?? []
+
     totalCount.value = res.data.contents?.totalCount ?? 0
   }).catch((error) => {
     if (error.data?.message) {
@@ -58,9 +74,14 @@ const loadItems = (pagination: Pagination) => {
     } else {
       globalSnackbarStore.showUnknown()
     }
+  }).finally(() => {
+    loading.value =false
   })
 }
-watch(selectedDateRange, () => {
-  console.log(selectedDateRange.value)
-})
+
+const handleDate = (date: Date[]) => {
+  selectedDateRange.value = date
+  page.value = 1
+  itemsPerPage.value = 5
+}
 </script>
