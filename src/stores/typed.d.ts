@@ -18,6 +18,6 @@ export interface MovieSearchRequest {
   movieName?: string; // 영화 이름
   page: number; // 현재 페이지 번호
   pageSize: number; // 페이지당 항목 수
-  startAt?: string; // 시작 날짜 및 시간 (ISO 8601 형식)
-  endAt?: string; // 종료 날짜 및 시간 (ISO 8601 형식)
+  startCreatedAt?: string; // 시작 날짜 및 시간 (ISO 8601 형식)
+  endCreatedAt?: string; // 종료 날짜 및 시간 (ISO 8601 형식)
 }

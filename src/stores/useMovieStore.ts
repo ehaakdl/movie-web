@@ -1,6 +1,6 @@
 
 import { defineStore } from 'pinia'
-import { CommonResponse, MovieSearchRequest } from './typed';
+import { MovieSearchRequest } from './typed';
 import axiosInst from '@axios';
 
 import { SortOrder, MovieApiProvider } from '@/stores/constants'
