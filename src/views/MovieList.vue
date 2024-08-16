@@ -58,6 +58,7 @@ const headers = [
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
 
+const isMounted = ref(false)
 const movieName = ref('')
 const loading = ref(false)
 const selectedCreatedAtRange = ref<Date[]>()
@@ -126,7 +127,7 @@ const loadItems = (_pagination: Pagination) => {
     loading.value = false
   })
 }
-const isMounted = ref(false)
+
 const handleOptions = (_pagination:Pagination) => {
   if(isMounted.value)
     loadItems(_pagination)
