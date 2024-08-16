@@ -23,8 +23,8 @@
     </VCol>
 
   </VRow>
-  <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers"
-    :items="items" :items-length="totalCount" @update:options="loadItems">
+  <v-data-table-server :loading=loading :page="page" :items-per-page="itemsPerPage" :headers="headers"
+    :items="items" :items-length="totalCount" @update:options="handleOptions">
     <template v-slot:item.createdAt="{ item }">
       {{ formatDate(convertToLocalTime(item.createdAt), 'YYYY-MM-DD') }}
     </template>
@@ -40,7 +40,7 @@
 <script setup lang="ts">
 import { useMovieStore } from '@/stores/useMovieStore';
 import { Pagination } from './typed';
-import { SortOrder } from '@/stores/constants';
+import { getSortOrder, SortOrder } from '@/stores/constants';
 import { useGlobalSnackbarStore } from '@/stores/useGlobalSnackbarStore';
 import { convertToLocalTime, formatDate, getBeginningOfDay, getEndOfDayTime } from '@/utils/dateUtils';
 
@@ -71,6 +71,7 @@ const pagination = ref<Pagination>({
   page: page.value,
   sortBy: []
 })
+
 
 const onClickSearch = () => {
   resetPaginationAndLoadItems()
@@ -125,7 +126,11 @@ const loadItems = (_pagination: Pagination) => {
     loading.value = false
   })
 }
-
+const isMounted = ref(false)
+const handleOptions = (_pagination:Pagination) => {
+  if(isMounted.value)
+    loadItems(_pagination)
+}
 const handleCreatedAt = (date: Date[]) => {
   selectedCreatedAtRange.value = date
   resetPaginationAndLoadItems()
@@ -148,4 +153,43 @@ const resetPaginationAndLoadItems = () => {
   page.value = defaultPage;
   itemsPerPage.value = defaultItemPerPage;
 };
+const route = useRoute()
+
+const parseSortQuery = (sortQueryParam: string) => {
+  const [key, order] = sortQueryParam.split(',');
+
+  return [{
+    key: key || '',
+    order: getSortOrder(order) || SortOrder.Desc,
+  }];
+}
+
+// queryparam example
+// http://localhost:3000/movie/search?startCreatedAt=2024-04-04T11:11:11&endCreatedAt=2024-05-14T11:11:11&page=10&pageSize=10&sort=openAt,asc&startOpenAt=2024-01-04T11:11:11&endOpenAt=2023-05-14T11:11:11
+const setFetchParams = () => {
+  /**
+   * Vdatatableserver 컴포넌트에 바인딩된 변수중 하나만 업데이트해도
+   * @update:options 이벤트가 호출되기 때문에 mounted 이벤트에서 API 호출해줄 필요가없다.
+   */
+  itemsPerPage.value = route.query?.pageSize ?? defaultItemPerPage
+  pagination.value.itemsPerPage = itemsPerPage.value
+
+  if (route.query?.sort) {
+    pagination.value.sortBy = parseSortQuery(route.query.sort)
+  }
+  if (route.query?.startCreatedAt && route.query?.endCreatedAt) {
+    selectedCreatedAtRange.value = [new Date(route.query.startCreatedAt), new Date(route.query.endCreatedAt)]
+  }
+  if (route.query?.startOpenAt && route.query?.endOpenAt) {
+    selectedOpenAtRange.value = [new Date(route.query.startOpenAt), new Date(route.query.endOpenAt)]
+  }
+  if (route.query?.movieName) {
+    movieName.value = route.query.movieName
+  }
+}
+onMounted(() => {
+  setFetchParams()
+  isMounted.value = true
+  // loadItems(pagination.value)
+})
 </script>
