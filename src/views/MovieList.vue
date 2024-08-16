@@ -1,16 +1,27 @@
 <template>
 
   <VRow justify="end">
-    <VCol cols="12" md="3" lg="3">
-      <VLabel>등록날짜</VLabel>
-      <VueDatePicker :model-value="selectedCreatedAtRange" range :enable-time-picker="false"
-        @update:model-value="handleCreatedAt" />
+    <VCol cols="12">
+      <div
+        class="d-flex flex-wrap ga-0 ga-sm-2 ga-md-2 ga-lg-2 ga-xl-2 align-end justify-md-center justify-lg-center justify-start">
+        <div class="flex-grow-1">
+          <VLabel>등록날짜</VLabel>
+          <VueDatePicker :model-value="selectedCreatedAtRange" range :enable-time-picker="false"
+            @update:model-value="handleCreatedAt" />
+        </div>
+        <div class="flex-grow-1">
+          <VLabel>개봉날짜</VLabel>
+          <VueDatePicker :model-value="selectedOpenAtRange" range :enable-time-picker="false"
+            @update:model-value="handleOpenAt" />
+        </div>
+        <div class="flex-grow-1">
+          <v-text-field v-model="movieName" style=" min-width: 10rem;" clearable placeholder="영화제목"
+            append-inner-icon="mdi-magnify" @keyup.enter="onClickSearch" @click:clear="onClearSearchField"
+            @click:append-inner="onClickSearch" variant="outlined" hide-details="auto"></v-text-field>
+        </div>
+      </div>
     </VCol>
-    <VCol cols="12" md="3" lg="3">
-      <VLabel>개봉날짜</VLabel>
-      <VueDatePicker :model-value="selectedOpenAtRange" range :enable-time-picker="false"
-        @update:model-value="handleOpenAt" />
-    </VCol>
+
   </VRow>
   <v-data-table-server :loading=loading v-model:page="page" v-model:items-per-page="itemsPerPage" :headers="headers"
     :items="items" :items-length="totalCount" @update:options="loadItems">
@@ -47,6 +58,7 @@ const headers = [
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
 
+const movieName = ref('')
 const loading = ref(false)
 const selectedCreatedAtRange = ref<Date[]>()
 const selectedOpenAtRange = ref<Date[]>()
@@ -60,7 +72,13 @@ const pagination = ref<Pagination>({
   sortBy: []
 })
 
-
+const onClickSearch = () => {
+  resetPaginationAndLoadItems()
+}
+const onClearSearchField = () => {
+  movieName.value = ''
+  resetPaginationAndLoadItems()
+}
 const loadItems = (_pagination: Pagination) => {
   loading.value = true
 
@@ -89,7 +107,8 @@ const loadItems = (_pagination: Pagination) => {
     startCreatedAt,
     endCreatedAt,
     startOpenAt,
-    endOpenAt
+    endOpenAt,
+    movieName: movieName.value
   })
 
   movieStore.getMovies(query).then((res) => {
@@ -130,3 +149,11 @@ const resetPaginationAndLoadItems = () => {
   itemsPerPage.value = defaultItemPerPage;
 };
 </script>
+<style scoped>
+.v-text-field .v-input__control .v-input__slot {
+  .v-input__slot {
+    min-height: unset;
+    height: 10px;
+  }
+}
+</style>
