@@ -54,7 +54,7 @@ const headers = [
   { title: '영화명', align: 'start', sortable: false, key: 'movieName' },
   // { title: '감독명', align: 'end', key: 'director' },
   { title: '장르', align: 'end', key: 'genre' },
-  { title: '개봉날짜', align: 'end', sortable: false, key: 'openAt' },
+  { title: '개봉날짜', align: 'end', key: 'openAt' },
   { title: '생성날짜', align: 'end', key: 'createdAt' },
 ] as const
 
