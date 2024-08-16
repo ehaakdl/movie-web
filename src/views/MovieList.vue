@@ -149,11 +149,3 @@ const resetPaginationAndLoadItems = () => {
   itemsPerPage.value = defaultItemPerPage;
 };
 </script>
-<style scoped>
-.v-text-field .v-input__control .v-input__slot {
-  .v-input__slot {
-    min-height: unset;
-    height: 10px;
-  }
-}
-</style>
